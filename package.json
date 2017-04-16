@@ -1,0 +1,26 @@
+{
+  "name": "maxjs",
+  "version": "1.0.0",
+  "description": "Max with nodejs es6",
+  "main": "server.js",
+  "scripts": {
+    "start": "node dist/app/server.js",
+    "clean": "rimraf dist",
+    "build": "npm run clean & babel ./app/**/*.js --out-dir dist"
+  },
+  "author": "MaxAng",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.9.3",
+    "morgan": "^1.8.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.3.3",
+    "rimraf": "^2.6.1"
+  }
+}
