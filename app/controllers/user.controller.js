@@ -8,18 +8,24 @@ export default class UserController{
         if (token) {
             jwt.verify(token, config.secret, function(err, decoded) {      
                 if (err) {
-                    return res.json({ error: 'Failed to authenticate or token expired.' });   
+                    res.json({ error: 'Failed to authenticate or token expired.' });   
                 } else {
                     req.decoded = decoded    
                     next();
                 }
             });
         } else {
-            return res.status(403).send({ 
-                error: 'Can Not Access, Please Login' 
+            res.status(403).json({ 
+                error: 'Cannot Access' 
             })
             
         }
+    }
+    me(req, res){
+        User.findOne({ username: req.decoded.username }, 'username name email status', (err, user)=>{
+            if(err) res.status(400).json(err)
+            else    res.json(user)
+        })
     }
     getAll(req, res){
         User.find({},'username name email status',(err, user)=>{
@@ -27,7 +33,7 @@ export default class UserController{
             else res.json(user)
         })
     }
-    get(req, res, next){
+    get(req, res){
         User.findOne({ username: req.params.username },'username name email status',(err, user)=>{
             if(err) res.status(400).json(err)
             else{
@@ -38,7 +44,47 @@ export default class UserController{
             }
         })
     }
-    regis(req, res, next){
+    put(req, res){
+       User.findOne({ username: req.params.username },'username name email password', (err, user)=>{
+            if(err) res.status(400).json(err)
+            else{
+                if(!user)
+                    res.status(404).json({ error: "Not Found"})
+                else{
+                    if(req.decoded.username === user.username || req.decoded.status === 9){
+                        user.username = req.body.username || user.username
+                        user.password = req.body.password || user.password
+                        user.email = req.body.email || user.email
+                        user.name = req.body.name || user.name
+                        user.save((err)=>{
+                            if(err) res.status(400).json(err)
+                            else    res.json({ message: "Update Success", user: user})
+                        })
+                    }else{
+                        res.status(403).json({ error: "Cannot Access" })
+                    }
+                }
+            }
+       })
+    }
+    delete(req, res){
+        User.findOne({ username: req.params.username }, (err, user)=>{
+            if(err) res.status(400).json(err)
+            else{
+                if(!user)
+                    res.status(404).json({ error: "Not Found"})
+                else{
+                    if(req.decoded.username === user.username || req.decoded.status === 9){
+                        user.remove()
+                        res.json({user: user, message: "Delete Success"})  
+                    }else{
+                        res.status(403).json({ error: "Cannot Access" })
+                    }
+                }
+            }
+       })
+    }
+    regis(req, res){
         var newUser = new User({
             username: req.body.username,
             password: req.body.password,

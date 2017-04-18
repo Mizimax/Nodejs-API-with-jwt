@@ -30,17 +30,24 @@ var UserController = function () {
             if (token) {
                 _jsonwebtoken2.default.verify(token, _mongo.config.secret, function (err, decoded) {
                     if (err) {
-                        return res.json({ error: 'Failed to authenticate or token expired.' });
+                        res.json({ error: 'Failed to authenticate or token expired.' });
                     } else {
                         req.decoded = decoded;
                         next();
                     }
                 });
             } else {
-                return res.status(403).send({
-                    error: 'Can Not Access, Please Login'
+                res.status(403).json({
+                    error: 'Cannot Access'
                 });
             }
+        }
+    }, {
+        key: 'me',
+        value: function me(req, res) {
+            _user.User.findOne({ username: req.decoded.username }, 'username name email status', function (err, user) {
+                if (err) res.status(400).json(err);else res.json(user);
+            });
         }
     }, {
         key: 'getAll',
@@ -51,7 +58,7 @@ var UserController = function () {
         }
     }, {
         key: 'get',
-        value: function get(req, res, next) {
+        value: function get(req, res) {
             _user.User.findOne({ username: req.params.username }, 'username name email status', function (err, user) {
                 if (err) res.status(400).json(err);else {
                     if (!user) res.status(404).json({ error: "Not Found" });else res.json(user);
@@ -59,8 +66,45 @@ var UserController = function () {
             });
         }
     }, {
+        key: 'put',
+        value: function put(req, res) {
+            _user.User.findOne({ username: req.params.username }, 'username name email password', function (err, user) {
+                if (err) res.status(400).json(err);else {
+                    if (!user) res.status(404).json({ error: "Not Found" });else {
+                        if (req.decoded.username === user.username || req.decoded.status === 9) {
+                            user.username = req.body.username || user.username;
+                            user.password = req.body.password || user.password;
+                            user.email = req.body.email || user.email;
+                            user.name = req.body.name || user.name;
+                            user.save(function (err) {
+                                if (err) res.status(400).json(err);else res.json({ message: "Update Success", user: user });
+                            });
+                        } else {
+                            res.status(403).json({ error: "Cannot Access" });
+                        }
+                    }
+                }
+            });
+        }
+    }, {
+        key: 'delete',
+        value: function _delete(req, res) {
+            _user.User.findOne({ username: req.params.username }, function (err, user) {
+                if (err) res.status(400).json(err);else {
+                    if (!user) res.status(404).json({ error: "Not Found" });else {
+                        if (req.decoded.username === user.username || req.decoded.status === 9) {
+                            user.remove();
+                            res.json({ user: user, message: "Delete Success" });
+                        } else {
+                            res.status(403).json({ error: "Cannot Access" });
+                        }
+                    }
+                }
+            });
+        }
+    }, {
         key: 'regis',
-        value: function regis(req, res, next) {
+        value: function regis(req, res) {
             var newUser = new _user.User({
                 username: req.body.username,
                 password: req.body.password,
