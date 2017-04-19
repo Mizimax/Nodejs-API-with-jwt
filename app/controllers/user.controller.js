@@ -8,7 +8,7 @@ export default class UserController{
         if (token) {
             jwt.verify(token, config.secret, function(err, decoded) {      
                 if (err) {
-                    res.status(400).json({ error: 'Failed to authenticate or token expired.' });   
+                    res.status(400).json({ error: 'Failed to authenticate or token expired.', err: err });   
                 } else {
                     req.decoded = decoded    
                     next();
