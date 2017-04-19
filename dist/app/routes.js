@@ -28,6 +28,9 @@ var Route = function () {
             this.myApp.route('/api/v1/users').post(this.user.regis).get(this.user.auth, this.user.getAll);
             this.myApp.post('/api/v1/user/login', this.user.login);
             this.myApp.get('/api/v1/user/me', this.user.auth, this.user.me);
+            this.myApp.get('/', function (req, res) {
+                res.json({ test: 'test' });
+            });
             this.myApp.route('/api/v1/user/:username').get(this.user.auth, this.user.get).put(this.user.auth, this.user.put).delete(this.user.auth, this.user.delete);
         }
     }, {

@@ -11,6 +11,9 @@ export default class Route{
             .get(this.user.auth,this.user.getAll)
         this.myApp.post('/api/v1/user/login', this.user.login)
         this.myApp.get('/api/v1/user/me', this.user.auth, this.user.me)
+        this.myApp.get('/', (req, res)=>{
+            res.json({test: 'test'})
+        })
         this.myApp.route('/api/v1/user/:username')
             .get(this.user.auth, this.user.get)
             .put(this.user.auth, this.user.put)

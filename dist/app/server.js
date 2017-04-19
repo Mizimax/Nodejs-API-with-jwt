@@ -43,11 +43,18 @@ else app.use((0, _compression2.default)()); // Production will compress file
 
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({
-	extended: true
+  extended: true
 }));
 
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 route.userRoute();
 
 app.listen(port, function () {
-	console.log('Listening at ' + port);
+  console.log('Listening at ' + port);
 });
