@@ -130,7 +130,7 @@ var UserController = function () {
                         var token = _jsonwebtoken2.default.sign({ _id: user._id.toHexString(), username: user.username, status: user.status, access: access }, _mongo.config.secret, {
                             expiresIn: 60 * 60
                         }).toString();
-                        res.json({ message: "Login Success", token: token });
+                        res.json({ message: "Login Success", user: user.username, token: token });
                     }
                 }
             });

@@ -18,7 +18,6 @@ export default class UserController{
             res.status(403).json({ 
                 error: 'Cannot Access' 
             })
-            
         }
     }
     me(req, res){
@@ -116,7 +115,7 @@ export default class UserController{
                     let token = jwt.sign({_id: user._id.toHexString(), username: user.username, status: user.status, access}, config.secret,{
                         expiresIn : 60*60
                     }).toString()
-                    res.json({ message: "Login Success", token: token })
+                    res.json({ message: "Login Success", user: user.username, token: token })
                 }
             }
         })
