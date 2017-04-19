@@ -30,7 +30,7 @@ var UserController = function () {
             if (token) {
                 _jsonwebtoken2.default.verify(token, _mongo.config.secret, function (err, decoded) {
                     if (err) {
-                        res.json({ error: 'Failed to authenticate or token expired.' });
+                        res.status(400).json({ error: 'Failed to authenticate or token expired.' });
                     } else {
                         req.decoded = decoded;
                         next();
