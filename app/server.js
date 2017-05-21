@@ -22,11 +22,13 @@ if(process.env.NODE_ENV == 'developemnt')
 else
 	app.use(compression()); // Production will compress file
 
+/* SUPPORT TYPE */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
+/* CORS */
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -34,7 +36,10 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
+
+/* ROUTE */
 route.userRoute()
+route.blogRoute()
 
 app.listen(port,() => {
 	console.log(`Listening at ${port}`)

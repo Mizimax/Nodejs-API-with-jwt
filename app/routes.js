@@ -16,7 +16,7 @@ export default class Route{
         })
         this.myApp.route('/api/v1/user/:username')
             .get(this.user.auth, this.user.get)
-            .put(this.user.auth, this.user.put)
+            .patch(this.user.auth, this.user.patch)
             .delete(this.user.auth, this.user.delete)
     }
 
