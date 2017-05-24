@@ -8,7 +8,7 @@ export default class UserController{
         if (token) {
             jwt.verify(token, config.secret, function(err, decoded) {      
                 if (err) {
-                    res.status(400).json({ error: 'Failed to authenticate or token expired.', err: err });   
+                    res.status(401).json({ error: 'Failed to authenticate or token expired.', err: err });   
                 } else {
                     req.decoded = decoded    
                     next();
@@ -23,13 +23,17 @@ export default class UserController{
     me(req, res){
         User.findOne({ username: req.decoded.username }, 'username name email status', (err, user)=>{
             if(err) res.status(400).json({error:err})
-            else    res.json(user)
+            else    res.status(200).json(user)
         })
     }
     getAll(req, res){
         User.find({},'username name email status',(err, user)=>{
             if(err) res.status(400).json({error:err})
-            else res.json(user)
+            else 
+                if(!user)
+                    res.status(404).json({ error: "User Not Found"})
+                else
+                    res.status(200).json(user)
         })
     }
     get(req, res){
@@ -39,7 +43,7 @@ export default class UserController{
                 if(!user)
                     res.status(404).json({ error: "User Not Found"})
                 else
-                    res.json(user)
+                    res.status(200).json(user)
             }
         })
     }
@@ -57,7 +61,7 @@ export default class UserController{
                         user.name = req.body.name || user.name
                         user.save((err)=>{
                             if(err) res.status(400).json({error:err})
-                            else    res.json({ message: "Update Success", user: user})
+                            else    res.status(200).json({ message: "Update Success", user: user})
                         })
                     }else{
                         res.status(403).json({ error: "Cannot Access"})
@@ -75,7 +79,7 @@ export default class UserController{
                 else{
                     if(req.decoded.username === user.username || req.decoded.status === 9){
                         user.remove()
-                        res.json({user: user, message: "Delete Success"})  
+                        res.status(200).json({user: user, message: "Delete Success"})  
                     }else{
                         res.status(403).json({ error: "Cannot Access"})
                     }
@@ -98,7 +102,7 @@ export default class UserController{
                 else
                     res.status(400).json({error: err})
             }else{
-                res.json({user: newUser, message: "Signup Success"})      
+                res.status(201).json({user: newUser, message: "Signup Success"})      
             }
         })
     }
