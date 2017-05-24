@@ -21,7 +21,7 @@ export default class Route{
     }
 
     blogRoute(){
-        this.myApp.get('/api/v1/blogs', blog.getAll)
+        //this.myApp.get('/api/v1/blogs', blog.getAll)
     }
 
 }
