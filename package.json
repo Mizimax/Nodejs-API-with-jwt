@@ -4,6 +4,7 @@
   "description": "Nodejs with jwt (es6)",
   "main": "server.js",
   "scripts": {
+    "postinstall": "npm run build",
     "start": "node dist/app/server.js",
     "clean": "rimraf dist",
     "build": "npm run clean & babel ./app/**/*.js --out-dir dist"
