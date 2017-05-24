@@ -17,7 +17,7 @@ var BlogModel = new Schema({
     created_by: { type:String, default: "Maxang" },
     comments: [comments],
     created_at: { type: Date, default: Date.now },
-    updated_at: Date
+    updated_at: { type: Date, default: Date.now },
 })
 
 export const Blog = mongoose.model('Blog', BlogModel)
