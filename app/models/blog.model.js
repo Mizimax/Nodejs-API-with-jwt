@@ -20,4 +20,4 @@ var BlogModel = new Schema({
     updated_at: Date
 })
 
-export const User = mongoose.model('Blog', BlogModel)
+export const Blog = mongoose.model('Blog', BlogModel)
