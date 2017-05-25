@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { config } from '../mongo.config'
 
 export default class AuthController{
     decode(req, res, next){
