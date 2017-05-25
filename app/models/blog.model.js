@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 var comments = new Schema({
     comment: { type: String, required: [true, 'Comment Required'] },
-    created_by: { type:String, default: "ผู้ไม่ประสงค์ออกนาม" },
+    created_by: { type:String, default: "Anonymous" },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });
@@ -19,5 +19,7 @@ var BlogModel = new Schema({
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
 })
+
+BlogModel.index({"name":1})
 
 export const Blog = mongoose.model('Blog', BlogModel)
