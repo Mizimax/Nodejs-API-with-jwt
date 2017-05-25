@@ -35,9 +35,9 @@ export default class Route{
         this.app.route('/api/v1/blog/:name/comments')
                 .post(this.comment.create)
                 .get(this.comment.getAll)
-        // this.app.route('/api/v1/blog/:name/comment/:id')
-        //         .patch(this.auth.decode, this.comment.patch)
-        //         .delete(this.auth.decode, this.comment.delete)
+        this.app.route('/api/v1/blog/:name/comment/:id')
+                .patch(this.auth.decode, this.comment.patch)
+                .delete(this.auth.decode, this.comment.delete)
     }
 
 

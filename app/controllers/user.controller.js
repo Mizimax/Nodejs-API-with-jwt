@@ -1,5 +1,6 @@
 import { User } from '../models/user.model'
 import { config } from '../mongo.config'
+import jwt from 'jsonwebtoken'
 
 export default class UserController{
     me(req, res){
@@ -26,21 +27,20 @@ export default class UserController{
         })
     }
     patch(req, res){
-       if(req.decoded.status === 9){
         User.findOne({ username: req.params.username },'username name email password', (err, user)=>{
                 if(err) res.status(400).json({error:err})
                 else{
                     if(!user)
                         res.status(404).json({ error: "User Not Found"})
                     else{
-                        if(req.decoded.username === user.username){
+                        if(req.decoded.status === 9 || req.decoded.username === user.username){
                             user.username = req.body.username || user.username
                             user.password = req.body.password || user.password
                             user.email = req.body.email || user.email
                             user.name = req.body.name || user.name
                             user.save((err)=>{
                                 if(err) res.status(400).json({error:err})
-                                else    res.status(200).json({ message: "Update Success", user: user})
+                                else    res.status(200).json({ message: "User Updated", user: user})
                             })
                         }else{
                             res.status(403).json({ error: "Cannot Access"})
@@ -48,30 +48,23 @@ export default class UserController{
                     }
                 }
         })
-       }else{
-            res.status(403).json({ error: "Cannot Access"})
-       }
     }
     delete(req, res){
-        if(req.decoded.status === 9){
-            User.findOne({ username: req.params.username }, (err, user)=>{
-                if(err) res.status(400).json({error:err})
+        User.findOne({ username: req.params.username }, (err, user)=>{
+            if(err) res.status(400).json({error:err})
+            else{
+                if(!user)
+                    res.status(404).json({ error: "User Not Found"})
                 else{
-                    if(!user)
-                        res.status(404).json({ error: "User Not Found"})
-                    else{
-                        if(req.decoded.username === user.username){
-                            user.remove()
-                            res.status(200).json({user: user, message: "Delete Success"})  
-                        }else{
-                            res.status(403).json({ error: "Cannot Access"})
-                        }
+                    if(req.decoded.status === 9 || req.decoded.username === user.username){
+                        user.remove()
+                        res.status(200).json({user: user, message: "User Deleted"})  
+                    }else{
+                        res.status(403).json({ error: "Cannot Access"})
                     }
                 }
-        })
-       }else{
-            res.status(403).json({ error: "Cannot Access"})
-       }
+            }
+    })
     }
     regis(req, res){
         let newUser = new User({
@@ -93,7 +86,7 @@ export default class UserController{
         })
     }
     login(req, res){
-        User.findOne({ username: req.body.username },'username password status tokens',(err, user)=>{
+        User.findOne({ username: req.body.username },'username password name status tokens',(err, user)=>{
             if(err) res.status(400).json({error:err})
             else{
                 if(!user)
@@ -102,10 +95,10 @@ export default class UserController{
                     res.status(400).json({ error: "Wrong Password"})
                 else{
                     let access = 'auth'
-                    let token = jwt.sign({_id: user._id.toHexString(), username: user.username, status: user.status, access}, config.secret,{
+                    let token = jwt.sign({_id: user._id.toHexString(), username: user.username, name: user.name, status: user.status, access}, config.secret,{
                         expiresIn : 60*60
                     }).toString()
-                    res.json({ message: "Login Success", user: user.username, name: user.name, token: token })
+                    res.json({ message: "Login Success", user: user.username, token: token })
                 }
             }
         })
