@@ -38,6 +38,9 @@ app.use(function (req, res, next) {
 });
 
 /* ROUTE */
+app.get('/', (req, res)=>{
+    res.json({test: 'test'})
+})
 route.userRoute()
 route.blogRoute()
 
