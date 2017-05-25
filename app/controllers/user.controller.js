@@ -1,5 +1,4 @@
 import { User } from '../models/user.model'
-import jwt from 'jsonwebtoken'
 import { config } from '../mongo.config'
 
 export default class UserController{
