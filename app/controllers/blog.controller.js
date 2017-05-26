@@ -3,7 +3,7 @@ import { Blog } from '../models/blog.model'
 export class ArticleController{
 
     getAll(req, res){
-        Blog.find({},'name topic pic created_by created_at',(err, data)=>{
+        Blog.find({},'name topic pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
             if(err) res.status(400).json({error:err})
             else    res.status(200).json(data)
         })
