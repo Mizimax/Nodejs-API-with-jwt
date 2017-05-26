@@ -17,8 +17,8 @@ const route = new Route(app)
 
 app.set('superSecret', config.secret); // secret variable
 
-if(process.env.NODE_ENV == 'developemnt')
-	app.use(morgan('dev')); // Development will have logs
+if(process.env.NODE_ENV == 'development')
+	app.use(morgan('dev')); // Development will have request logs
 else
 	app.use(compression()); // Production will compress file
 
@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
 
 /* ROUTE */
 app.get('/', (req, res)=>{
-    res.json({test: 'test'})
+    res.json({message: 'Example of RESTful api + jwt'})
 })
 route.userRoute()
 route.blogRoute()
