@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "postinstall": "npm run build",
-    "start": "node dist/app/server.js",
+    "start": "node dist/server.js",
     "clean": "rimraf dist",
-    "build": "npm run clean & babel ./app/**/*.js --out-dir dist"
+    "build": "npm run clean & babel app/ -d dist"
   },
   "author": "MaxAng",
   "license": "ISC",
