@@ -27,6 +27,7 @@ export default class Route{
         this.app.route('/api/v1/blogs')
                 .post(this.auth.decode, this.article.create)
                 .get(this.article.getAll)
+        this.app.get('/api/v1/blogs/count', this.article.count)
         this.app.route('/api/v1/blog/:name')
                 .get(this.article.get)
                 .patch(this.auth.decode, this.article.patch)

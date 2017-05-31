@@ -9,6 +9,13 @@ export class ArticleController{
         })
     }
 
+    count(req, res){
+        Blog.count((err,count)=>{
+            if(err) res.status(400).json({error:err})
+            else    res.status(200).json({num: count})
+        })
+    }
+
     get(req, res){
         Blog.findOne({ name: req.params.name },'topic content pic created_by created_at updated_at',(err, data)=>{
             if(err) res.status(400).json({error:err})
