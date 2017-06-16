@@ -13,6 +13,7 @@ var BlogModel = new Schema({
     name: { type: String, required: [true, 'Topic Name Required'] },
     topic: { type: String, required: [true, 'Topic Required']},
     content: { type: String, required: [true, 'Content Required'] },
+    category: { type: String, required: [true, 'Category Required'] },
     pic: { type: String, default: "imgs/blog/default.png" },
     created_by: { type:String, default: "Anonymous" },
     comments: [comments],

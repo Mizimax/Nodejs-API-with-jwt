@@ -1,16 +1,17 @@
 import { Blog } from '../models/blog.model'
+import reCAPTCHA from 'recaptcha2'
 
 export class ArticleController{
 
     getAll(req, res){
-        Blog.find({},'name topic pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
+        Blog.find({ topic: { $regex: req.query.search || '' }, category: { $all: [req.query.category] } },'name topic pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
             if(err) res.status(400).json({error:err})
             else    res.status(200).json(data)
         })
     }
 
     count(req, res){
-        Blog.count((err,count)=>{
+        Blog.find({ topic: { $regex: req.query.search || '' }, category: { $all: [req.query.category] } }).count((err,count)=>{
             if(err) res.status(400).json({error:err})
             else    res.status(200).json({num: count})
         })
@@ -23,7 +24,7 @@ export class ArticleController{
                 if(!data)
                     res.status(404).json({ error: "Article Not Found"})
                 else
-                    res.status(200).json(data)
+                    res.status(200).json(data.comments)
         })
     }
 
@@ -93,10 +94,26 @@ export class ArticleController{
 
 export class CommentController{
 
+    captcha(req, res){
+        let recaptcha=new reCAPTCHA({
+          siteKey:'6LfxASUUAAAAAAcl1piDOzqbOvzYEVSviWSGGl1q',
+          secretKey:'6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ'
+        })
+        recaptcha.validateRequest(req.body.captcha)
+          .then(function(){
+            // validated and secure
+            next()
+          })
+          .catch(function(errorCodes){
+            // invalid
+            res.status(403).json({ error: "reCaptcha Error"})
+          });
+    }
+
     getAll(req, res){
-        Blog.find({ name: req.params.name },'comments',(err, data)=>{
+        Blog.findOne({ name: req.params.name },'comments',(err, data)=>{
             if(err) res.status(400).json({error:err})
-            else    res.status(200).json(data)
+            else    res.status(200).json(data.comments)
         })
     }
 
@@ -113,7 +130,7 @@ export class CommentController{
                     })
                     data.save((err)=>{
                         if(err) res.status(400).json({error:err})
-                        else    res.status(200).json({ message: "Commented", data: data})
+                        else    res.status(200).json({ message: "Commented", data: data.comments[data.comments.length - 1]})
                     })
                 }
             }
