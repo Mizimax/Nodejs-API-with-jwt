@@ -24,7 +24,7 @@ export class ArticleController{
                 if(!data)
                     res.status(404).json({ error: "Article Not Found"})
                 else
-                    res.status(200).json(data.comments)
+                    res.status(200).json(data)
         })
     }
 

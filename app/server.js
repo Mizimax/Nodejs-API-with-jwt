@@ -11,7 +11,7 @@ import dbConnect from './mongoose'
 
 const Mongoose = dbConnect(config.database)
 const app = express()
-const port = Number(process.env.PORT || 8000)
+const port = Number(process.env.PORT || 8080)
 
 const route = new Route(app)
 
