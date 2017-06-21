@@ -34,7 +34,7 @@ export default class Route{
                 .delete(this.auth.decode, this.article.delete)
         /* Comment */
         this.app.route('/api/v1/blog/:name/comments')
-                .post(this.comment.captcha, this.comment.create)
+                .post(this.comment.create)
                 .get(this.comment.getAll)
         this.app.route('/api/v1/blog/:name/comment/:id')
                 .patch(this.auth.decode, this.comment.patch)
