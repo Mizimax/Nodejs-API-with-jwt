@@ -96,12 +96,12 @@ export class CommentController{
 
     captcha(req, res){
         https.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ&response=" + req.body.captcha
-            , function(res) {
+            , function(response) {
                 var data = "";
-                res.on('data', function (chunk) {
+                response.on('data', function (chunk) {
                         data += chunk.toString();
                 });
-                res.on('end', function() {
+                response.on('end', function() {
                         try {
                                 var parsedData = JSON.parse(data);
                                 res.json(parsedData)
