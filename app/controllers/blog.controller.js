@@ -97,17 +97,16 @@ export class CommentController{
     captcha(req, res, next){
         https.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ&response=" + req.body.captcha
             , function(response) {
-                var data = "";
+                let data = "";
                 response.on('data', function (chunk) {
                         data += chunk.toString();
                 });
                 response.on('end', function() {
-                    try {
-                        var parsedData = JSON.parse(data);
-                        next()
-                    } catch (e) {
-                        res.status(400).json(e)
-                    }
+                    let parsedData = JSON.parse(data);
+                    if(!parsedData.success)
+                        res.status(400).json(parsedData) 
+                    else
+                        next()        
                 });
             }
         )
