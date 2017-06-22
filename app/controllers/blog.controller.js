@@ -94,7 +94,7 @@ export class ArticleController{
 
 export class CommentController{
 
-    captcha(req, res){
+    captcha(req, res, next){
         https.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ&response=" + req.body.captcha
             , function(response) {
                 var data = "";
@@ -102,12 +102,12 @@ export class CommentController{
                         data += chunk.toString();
                 });
                 response.on('end', function() {
-                        try {
-                                var parsedData = JSON.parse(data);
-                                res.json(parsedData)
-                        } catch (e) {
-                                res.status(400).json(e)
-                        }
+                    try {
+                        var parsedData = JSON.parse(data);
+                        next()
+                    } catch (e) {
+                        res.status(400).json(e)
+                    }
                 });
             }
         )
