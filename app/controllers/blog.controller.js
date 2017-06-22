@@ -102,12 +102,12 @@ export class CommentController{
                         data += chunk.toString();
                 });
                 response.on('end', function() {
-                        try {
-                                var parsedData = JSON.parse(data);
-                                res.json(parsedData)
-                        } catch (e) {
-                                res.status(400).json(e)
-                        }
+                    try {
+                        var parsedData = JSON.parse(data);
+                        next()
+                    } catch (e) {
+                        res.status(400).json(e)
+                    }
                 });
             }
         )
