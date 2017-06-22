@@ -5,19 +5,19 @@ import jwt from 'jsonwebtoken'
 export default class UserController{
     me(req, res){
         User.findOne({ username: req.decoded.username }, 'username name email status', (err, user)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else    res.status(200).json(user)
         })
     }
     getAll(req, res){
         User.find({},'username name email status',(err, user)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else    res.status(200).json(user)
         })
     }
     get(req, res){
         User.findOne({ username: req.params.username },'username name email status',(err, user)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else{
                 if(!user)
                     res.status(404).json({ error: "User Not Found"})
@@ -28,7 +28,7 @@ export default class UserController{
     }
     patch(req, res){
         User.findOne({ username: req.params.username },'username name email password', (err, user)=>{
-                if(err) res.status(400).json({error:err})
+                if(err) res.status(400).json(err)
                 else{
                     if(!user)
                         res.status(404).json({ error: "User Not Found"})
@@ -39,7 +39,7 @@ export default class UserController{
                             user.email = req.body.email || user.email
                             user.name = req.body.name || user.name
                             user.save((err)=>{
-                                if(err) res.status(400).json({error:err})
+                                if(err) res.status(400).json(err)
                                 else    res.status(200).json({ message: "User Updated", user: user})
                             })
                         }else{
@@ -51,14 +51,14 @@ export default class UserController{
     }
     delete(req, res){
         User.findOne({ username: req.params.username }, (err, user)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else{
                 if(!user)
                     res.status(404).json({ error: "User Not Found"})
                 else{
                     if(req.decoded.status === 9 || req.decoded.username === user.username){
                         user.remove()
-                        res.status(200).json({user: user, message: "User Deleted"})  
+                        res.status(200).json({message: "User Deleted", user: user})  
                     }else{
                         res.status(403).json({ error: "Cannot Access"})
                     }
@@ -76,18 +76,15 @@ export default class UserController{
         });
         newUser.save(function(err) {
             if (err){
-                if(err.errors)
-                    res.status(400).json({error: err.errors})
-                else
-                    res.status(400).json({error: err})
+                res.status(400).json(err)
             }else{
-                res.status(201).json({user: newUser, message: "Signup Success"})      
+                res.status(201).json({message: "Signup Success", user: newUser})      
             }
         })
     }
     login(req, res){
         User.findOne({ username: req.body.username },'username password name status tokens',(err, user)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else{
                 if(!user)
                     res.status(404).json({ error: "User Not Found"})

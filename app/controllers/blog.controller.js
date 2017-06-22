@@ -99,7 +99,7 @@ export class CommentController{
           siteKey:'6LfxASUUAAAAAAcl1piDOzqbOvzYEVSviWSGGl1q',
           secretKey:'6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ'
         })
-        recaptcha.validateRequest(req.body.captcha)
+        recaptcha.validate(req.body.captcha)
           .then(function(){
             // validated and secure
             next()

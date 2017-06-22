@@ -4,6 +4,7 @@ import express from 'express'
 import morgan from 'morgan'
 import compression from 'compression'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import Route from './routes'
 import { config } from './mongo.config'
@@ -29,13 +30,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 /* CORS */
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,x-access-token');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
+app.use(cors())
 
 /* ROUTE */
 app.get('/', (req, res)=>{
