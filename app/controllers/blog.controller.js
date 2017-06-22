@@ -1,5 +1,5 @@
 import { Blog } from '../models/blog.model'
-import reCAPTCHA from 'recaptcha2'
+import https from 'https'
 
 export class ArticleController{
 
@@ -95,19 +95,22 @@ export class ArticleController{
 export class CommentController{
 
     captcha(req, res){
-        let recaptcha=new reCAPTCHA({
-          siteKey:'6LfxASUUAAAAAAcl1piDOzqbOvzYEVSviWSGGl1q',
-          secretKey:'6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ'
-        })
-        recaptcha.validate(req.body.captcha)
-          .then(function(){
-            // validated and secure
-            next()
-          })
-          .catch(function(errorCodes){
-            // invalid
-            res.status(403).json({ error: "reCaptcha Error", code: errorCodes[0]})
-          });
+        https.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfxASUUAAAAACTTQGDkkVyihUGmjzEZjuLsqBWZ&response=" + req.body.captcha
+            , function(res) {
+                var data = "";
+                res.on('data', function (chunk) {
+                        data += chunk.toString();
+                });
+                res.on('end', function() {
+                        try {
+                                var parsedData = JSON.parse(data);
+                                res.json(parsedData)
+                        } catch (e) {
+                                res.status(400).json(e)
+                        }
+                });
+            }
+        )
     }
 
     getAll(req, res){
