@@ -106,7 +106,7 @@ export class CommentController{
           })
           .catch(function(errorCodes){
             // invalid
-            res.status(403).json({ error: "reCaptcha Error"})
+            res.status(403).json({ error: "reCaptcha Error", code: errorCodes})
           });
     }
 
