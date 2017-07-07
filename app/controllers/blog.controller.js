@@ -11,7 +11,7 @@ export class ArticleController{
     }
 
     count(req, res){
-        Blog.find({ topic: { $regex: req.query.search || '' }, category: { $all: [req.query.category] } }).count((err,count)=>{
+        Blog.find({ topic: { $regex: req.query.search || '' }, category: req.query.category || /./ }).count((err,count)=>{
             if(err) res.status(400).json({error:err})
             else    res.status(200).json({num: count})
         })
