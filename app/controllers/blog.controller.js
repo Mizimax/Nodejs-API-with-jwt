@@ -5,21 +5,21 @@ export class ArticleController{
 
     getAll(req, res){
         Blog.find({ topic: { $regex: req.query.search || '' }, category: req.query.category || /./ },'name topic pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else    res.status(200).json(data)
         })
     }
 
     count(req, res){
         Blog.find({ topic: { $regex: req.query.search || '' }, category: req.query.category || /./ }).count((err,count)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else    res.status(200).json({num: count})
         })
     }
 
     get(req, res){
         Blog.findOne({ name: req.params.name },'topic content pic created_by created_at updated_at',(err, data)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else
                 if(!data)
                     res.status(404).json({ error: "Article Not Found"})
@@ -39,7 +39,7 @@ export class ArticleController{
             })
             newBlog.save(function(err) {
                 if (err){
-                        res.status(400).json({error: err})
+                        res.status(400).json(err)
                 }else{
                     res.status(201).json({data: newBlog, message: "Article is created"})      
                 }
@@ -51,7 +51,7 @@ export class ArticleController{
 
     patch(req, res){
         Blog.findOne({ name: req.params.name },'topic content pic updated_at', (err, data)=>{
-                if(err) res.status(400).json({error:err})
+                if(err) res.status(400).json(err)
                 else{
                     if(!data)
                         res.status(404).json({ error: "Article Not Found"})
@@ -62,7 +62,7 @@ export class ArticleController{
                             data.pic = req.body.pic || data.pic
                             data.updated_at = Date.now()
                             data.save((err)=>{
-                                if(err) res.status(400).json({error:err})
+                                if(err) res.status(400).json(err)
                                 else    res.status(200).json({ message: "Article Updated", data: data})
                             })
                         }else{
@@ -75,7 +75,7 @@ export class ArticleController{
 
     delete(req, res){
         Blog.findOne({ name: req.params.name },'topic content pic updated_at', (err, data)=>{
-                if(err) res.status(400).json({error:err})
+                if(err) res.status(400).json(err)
                 else{
                     if(!data)
                         res.status(404).json({ error: "Article Not Found"})
@@ -114,14 +114,14 @@ export class CommentController{
 
     getAll(req, res){
         Blog.findOne({ name: req.params.name },'comments',(err, data)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else    res.status(200).json(data.comments)
         })
     }
 
     create(req, res){
         Blog.findOne({ name: req.params.name },'comments', (err, data)=>{
-            if(err) res.status(400).json({error:err})
+            if(err) res.status(400).json(err)
             else{
                 if(!data)
                     res.status(404).json({ error: "Article Not Found"})
@@ -131,7 +131,7 @@ export class CommentController{
                         created_by: req.body.created_by
                     })
                     data.save((err)=>{
-                        if(err) res.status(400).json({error:err})
+                        if(err) res.status(400).json(err)
                         else    res.status(200).json({ message: "Commented", data: data.comments[data.comments.length - 1]})
                     })
                 }
@@ -141,7 +141,7 @@ export class CommentController{
 
     patch(req, res){
         Blog.findOne({ name: req.params.name },'comments created_by', (err, data)=>{
-                if(err) res.status(400).json({error:err})
+                if(err) res.status(400).json(err)
                 else{
                     if(!data)
                         res.status(404).json({ error: "Article Not Found"})
@@ -151,7 +151,7 @@ export class CommentController{
                             myComment.comment = req.body.comment || myComment.comment
                             myComment.updated_at = Date.now()
                             data.save((err)=>{
-                                if(err) res.status(400).json({error:err})
+                                if(err) res.status(400).json(err)
                                 else    res.status(200).json({ message: "Comment Updated", data: myComment})
                             })
                         }else{
@@ -164,7 +164,7 @@ export class CommentController{
 
     delete(req, res){
        Blog.findOne({ name: req.params.name },'comments created_by', (err, data)=>{
-                if(err) res.status(400).json({error:err})
+                if(err) res.status(400).json(err)
                 else{
                     if(!data)
                         res.status(404).json({ error: "Article Not Found"})
@@ -173,7 +173,7 @@ export class CommentController{
                         if(req.decoded.status === 9 || req.decoded.name === myComment.created_by){
                             myComment.remove()
                             data.save((err)=>{
-                                if(err) res.status(400).json({error:err})
+                                if(err) res.status(400).json(err)
                                 else    res.status(200).json({ message: "Comment Deleted", data: myComment})
                             })
                         }else{

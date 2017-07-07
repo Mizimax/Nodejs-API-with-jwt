@@ -52,6 +52,7 @@ var UserModel = new Schema({
         }
     ]
 })
+
 UserModel.index({"username":1}, { "unique": true })
 UserModel.index({"email":1}, { "unique": true })
 
