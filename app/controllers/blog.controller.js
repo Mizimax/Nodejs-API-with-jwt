@@ -4,7 +4,7 @@ import https from 'https'
 export class ArticleController{
 
     getAll(req, res){
-        Blog.find({ topic: { $regex: req.query.search || '' }, category: req.query.category || /./ },'name topic pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
+        Blog.find({ topic: { $regex: req.query.search || '' }, category: req.query.category || /./ },'name topic sub_title pic created_by created_at',{ sort: req.query.sort, skip: Number(req.query.offset), limit: Number(req.query.limit)},(err, data)=>{
             if(err) res.status(400).json(err)
             else    res.status(200).json(data)
         })
