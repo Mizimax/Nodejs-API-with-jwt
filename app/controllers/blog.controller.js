@@ -33,9 +33,12 @@ export class ArticleController{
             let newBlog = new Blog({
                 name: req.body.name,
                 topic: req.body.topic,
+                sub_title: req.body.sub_title,
                 content: req.body.content,
                 pic: req.body.pic,
-                created_by: req.decoded.name
+                created_by: req.decoded.name,
+                category: req.body.category,
+                tags: req.body.tags
             })
             newBlog.save(function(err) {
                 if (err){
