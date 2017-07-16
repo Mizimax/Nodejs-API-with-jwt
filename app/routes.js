@@ -3,6 +3,7 @@ import {ArticleController, CommentController} from './controllers/blog.controlle
 import AuthController from './controllers/auth.controller'
 
 export default class Route{
+    
     constructor(app){
         this.app = app
         this.user = new UserController()
@@ -17,7 +18,7 @@ export default class Route{
         this.app.post('/api/v1/user/login', this.user.login)
         this.app.get('/api/v1/user/me', this.auth.decode, this.user.me)
         this.app.route('/api/v1/user/:username')
-            .get(this.auth.decode, this.user.get)
+            .get(this.user.get)
             .patch(this.auth.decode, this.user.patch)
             .delete(this.auth.decode, this.user.delete)
     }
