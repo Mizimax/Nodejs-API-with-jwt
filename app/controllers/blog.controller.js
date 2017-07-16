@@ -18,7 +18,7 @@ export class ArticleController{
     }
 
     get(req, res){
-        Blog.findOne({ name: req.params.name },'topic sub_title content pic created_by created_at updated_at',(err, data)=>{
+        Blog.findOne({ name: req.params.name },'topic sub_title content pic tags created_by created_at updated_at',(err, data)=>{
             if(err) res.status(400).json(err)
             else
                 if(!data)
